@@ -25,19 +25,83 @@ public class TicTacToe {
         int moveCount = 0;
         boolean isPlayerOneTurn = true;
 
-        while(moveCount< size*size){
-            if(isPlayerOneTurn){
-                System.out.println("Joueur 1 joue (X)");
+        while (!isOver()) {
+            if (isPlayerOneTurn) {
+                System.out.println("Tour du Joueur 1 (X)");
                 getMoveFromPlayer(player);
-            }else{
-                System.out.println("Joueur 2 joue (O)");
+            } else {
+                System.out.println("Tour du Joueur 2 (O)");
                 getMoveFromPlayer(player2);
             }
+
             display();
             moveCount++;
             isPlayerOneTurn = !isPlayerOneTurn;
+
+            if (isOver()) {
+                System.out.println("Jeu terminé !");
+                break;
+            }
         }
-        System.out.println("Game over - Toutes les cases sont pleines !");
+    }
+
+
+    public boolean isOver() {
+        return isBoardFull() || hasThreeAligned();
+    }
+
+    private boolean isBoardFull() {
+        for (Cell cell : cellObjects) {
+            if (cell.isEmpty()) {
+                return false; // S'il y a au moins une cellule vide, le plateau n'est pas plein
+            }
+        }
+        return true;
+    }
+
+    private boolean hasThreeAligned() {
+        // Vérifie les lignes horizontales, verticales et diagonales
+        return checkRowsForWin() || checkColumnsForWin() || checkDiagonalsForWin();
+    }
+
+    private boolean checkRowsForWin() {
+        for (int i = 0; i < size; i++) {
+            if (!cellObjects[i * size].isEmpty() &&
+                    cellObjects[i * size].getRepresentation().equals(cellObjects[i * size + 1].getRepresentation()) &&
+                    cellObjects[i * size + 1].getRepresentation().equals(cellObjects[i * size + 2].getRepresentation())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkColumnsForWin() {
+        for (int i = 0; i < size; i++) {
+            if (!cellObjects[i].isEmpty() &&
+                    cellObjects[i].getRepresentation().equals(cellObjects[i + size].getRepresentation()) &&
+                    cellObjects[i + size].getRepresentation().equals(cellObjects[i + 2 * size].getRepresentation())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkDiagonalsForWin() {
+        // Première diagonale
+        if (!cellObjects[0].isEmpty() &&
+                cellObjects[0].getRepresentation().equals(cellObjects[size + 1].getRepresentation()) &&
+                cellObjects[size + 1].getRepresentation().equals(cellObjects[2 * size + 2].getRepresentation())) {
+            return true;
+        }
+
+        // Deuxième diagonale
+        if (!cellObjects[size - 1].isEmpty() &&
+                cellObjects[size - 1].getRepresentation().equals(cellObjects[2 * size - 1].getRepresentation()) &&
+                cellObjects[2 * size - 1].getRepresentation().equals(cellObjects[3 * size - 3].getRepresentation())) {
+            return true;
+        }
+
+        return false;
     }
 
     public void display() {
@@ -51,25 +115,6 @@ public class TicTacToe {
         System.out.println("-------------");
     }
 
-//    public void getMoveFromPlayer(Player currentPlayer) {
-//        int x;
-//        int y;
-//        boolean validMove;
-//        do {
-//            System.out.println("Veuillez entrer la coordonnée X : ");
-//            x = getUserInput();
-//            validMove = verifyUserInput(x);
-//
-//            System.out.println("Veuillez entrer la coordonnée Y : ");
-//            y = getUserInput();
-//            validMove = validMove && verifyUserInput(y);
-//            if (validMove && verifyIfCellIsEmpty(x, y)) {
-//                occupyCell(x, y, currentPlayer.getRepresentation());
-//            } else {
-//                System.out.println("Veuillez choisir une autre case, celle-ci est déjà prise !");
-//            }
-//        }while(true);
-//    }
 
     public void getMoveFromPlayer(Player currentPlayer) {
         int x, y;
@@ -99,7 +144,7 @@ public class TicTacToe {
         } while (!isValidMove);
     }
 
-    static int getUserInput() {
+    public int getUserInput() {
         Scanner inputUser = new Scanner(System.in);
         System.out.println("Saisissez une coordonnée (entre 0 et 2).");
         while (!inputUser.hasNextInt()) {

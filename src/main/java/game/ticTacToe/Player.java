@@ -16,4 +16,5 @@ public abstract class Player {
 
         return representation;
     }
+
 }

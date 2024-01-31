@@ -17,7 +17,8 @@ public class TicTacToe {
         gameManager = new GameManager(boardManager, playerManager, view, interactionUtilisateur );
     }
 
-    public void playGame(){
+    public void playGame()
+    {
         gameManager.play();
     }
 

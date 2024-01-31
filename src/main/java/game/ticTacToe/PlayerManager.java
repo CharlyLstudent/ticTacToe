@@ -6,7 +6,7 @@ public class PlayerManager {
    private Player player1;
    private Player player2;
 
-    private Player currentPlayer;
+   private Player currentPlayer;
 
 
     public void getGameType(int gameType) {
